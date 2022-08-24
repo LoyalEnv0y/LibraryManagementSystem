@@ -1,30 +1,15 @@
 package libraryManagementSystem.ISBN;
 
-// TODO: TEST THE ERROR MESSAGES
-// TODO: FINISH THE METHODS
-// TODO: TEST THE METHODS
-
 public class ISBNHandler {
-    private String value;
-    private ISBNVersion format;
-
-    public ISBNHandler(String value, ISBNVersion format) {
-        // Format the input so there are no dashes or whitespaces.
-        this.value = value.replace("-", "").replace(" ", "").strip();
-        this.format = format;
-    }
-
-    public boolean isValid() {
-        return verifyValue(value) && verifyLengthFormatPair(value.length(), format);
-    }
-
     public boolean verifyValue(String value) {
-        if (value.length() == 10) {
-            return verifyValueOfTen(value);
+        String formattedValue = formatValue(value);
+
+        if (formattedValue.length() == 10) {
+            return verifyValueOfTen(formattedValue);
         }
 
-        if (value.length() == 13) {
-            return verifyValueOfThirteen(value);
+        if (formattedValue.length() == 13) {
+            return verifyValueOfThirteen(formattedValue);
         }
 
         return false;
@@ -33,6 +18,7 @@ public class ISBNHandler {
     private boolean verifyValueOfTen(String value) {
         int total = 0;
         String firstNine = value.substring(0, 9);
+
         // Validate that the first 9 characters contain only digits.
         if (!firstNine.matches("[0-9]{9}")) {
             return false;
@@ -53,19 +39,25 @@ public class ISBNHandler {
         return total % 11 == 0;
     }
 
+    // TODO: FINISH THE METHOD AND WRITE TESTS
     private boolean verifyValueOfThirteen(String value) {
         throw new UnsupportedOperationException("Implement the method");
     }
 
-    public boolean verifyLengthFormatPair(int length, ISBNVersion format) {
-        if (length == 10 && !format.equals(ISBNVersion.TEN_DIGIT)) {
-            return false;
+    public boolean verifyVersion(int length, ISBNVersion format) {
+        if (length == 10 && format.equals(ISBNVersion.TEN_DIGIT)) {
+            return true;
         }
 
-        return length != 13 || format.equals(ISBNVersion.THIRTEEN_DIGIT);
+        return length == 13 && format.equals(ISBNVersion.THIRTEEN_DIGIT);
     }
 
+    // TODO: FINISH THE METHOD AND WRITE TESTS
     public void tenDigitToThirteenDigit(String value) {
         throw new UnsupportedOperationException("Implement the method");
+    }
+
+    public String formatValue(String value) {
+        return value.replace("-", "").replace(" ", "").strip();
     }
 }
