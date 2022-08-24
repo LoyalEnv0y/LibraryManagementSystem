@@ -12,47 +12,126 @@ public class ISBNTest {
     }
 
     @Test
-    public void testFormatValueWithDashes() {
-        String value = "1-61729-223-0";
-        start(value, ISBNVersion.TEN_DIGIT);
-        assertEquals("1617292230", isbn.formatValue(value));
+    public void testInitializeValidISBNTen() {
+        start("1617292230", ISBNVersion.TEN_DIGIT);
+        assertEquals("1617292230", isbn.getValue());
     }
 
     @Test
-    public void testFormatValueWithXAsCheckDigit() {
-        String value = "3-598-21507-X";
-        start(value, ISBNVersion.TEN_DIGIT);
-        assertEquals("359821507X", isbn.formatValue(value));
+    public void testInitializeValidISBNTenWithDashes() {
+        start("1-61729-223-0", ISBNVersion.TEN_DIGIT);
+        assertEquals("1617292230", isbn.getValue());
     }
 
     @Test
-    public void testFormatValueWithWhiteSpaces() {
-        String value = "\n3-12-   565751-2\t";
-        start(value, ISBNVersion.TEN_DIGIT);
-        assertEquals("3125657512", isbn.formatValue(value));
+    public void testInitializeValidISBNTenWithX() {
+        start("3-598-21507-X", ISBNVersion.TEN_DIGIT);
+        assertEquals("359821507X", isbn.getValue());
     }
 
     @Test
-    public void testSetValueWithValidInput() {
+    public void testInitializeValidISBNTenWithWrongVersion() {
+        String value = "1617292230";
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> start(value, ISBNVersion.THIRTEEN_DIGIT)
+        );
+
+        assertEquals("\nERROR:\n  Incompatible length -> "
+                        + value.length() + " is not compatible"
+                        + " with " + ISBNVersion.THIRTEEN_DIGIT,
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    public void testInitializeInvalidISBNTen() {
+        String value = "1617292233";
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> start(value, ISBNVersion.TEN_DIGIT)
+        );
+
+        assertEquals("\nERROR:\n  Value -> "
+                        + value + " is not a valid ISBN value",
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    public void testInitializeInvalidISBNTenWithDashes() {
+        String value = "1-61729-223-3";
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> start(value, ISBNVersion.TEN_DIGIT)
+        );
+
+        assertEquals("\nERROR:\n  Value -> "
+                        + value + " is not a valid ISBN value",
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    public void testSetValueTenWithValidInput() {
         start("3-598-21508-8", ISBNVersion.TEN_DIGIT);
         isbn.setValue("8-711-07559-7");
         assertEquals("8711075597", isbn.getValue());
-        assertTrue(isbn.isValid());
     }
 
     @Test
-    public void testSetValueWithValidInputWithoutDashes() {
+    public void testSetValueTenWithValidInputWithoutDashes() {
         start("3-598-21508-8", ISBNVersion.TEN_DIGIT);
         isbn.setValue("8711075597");
         assertEquals("8711075597", isbn.getValue());
-        assertTrue(isbn.isValid());
     }
 
     @Test
-    public void testSetValueWithInvalidInput() {
+    public void testSetValueTenWithInvalidInput() {
         start("3-598-21508-8", ISBNVersion.TEN_DIGIT);
-        isbn.setValue("8-711-07559-9");
-        assertEquals("8711075599", isbn.getValue());
-        assertFalse(isbn.isValid());
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> isbn.setValue("8-711-07559-9")
+        );
+
+        assertEquals("\nERROR:\n  Value -> "
+                        + "8-711-07559-9" + " is not a valid ISBN value",
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    public void testSetValueTenWithInvalidInputWithoutDashes() {
+        start("3-598-21508-8", ISBNVersion.TEN_DIGIT);
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> isbn.setValue("8711075599")
+        );
+
+        assertEquals("\nERROR:\n  Value -> "
+                        + "8711075599" + " is not a valid ISBN value",
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    public void testSetValueTenWithInvalidVersion() {
+        start("3-598-21508-8", ISBNVersion.TEN_DIGIT);
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> isbn.setValue("8-697236-447109")
+        );
+
+        assertEquals("\nERROR:\n  Incompatible length -> "
+                        + "8-697236-447109".length() + " is not compatible"
+                        + " with " + ISBNVersion.TEN_DIGIT,
+                exception.getMessage()
+        );
     }
 }
