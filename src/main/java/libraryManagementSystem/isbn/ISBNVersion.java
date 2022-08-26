@@ -1,4 +1,4 @@
-package libraryManagementSystem.ISBN;
+package libraryManagementSystem.isbn;
 
 public enum ISBNVersion {
     TEN_DIGIT,
