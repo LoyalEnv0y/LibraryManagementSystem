@@ -67,11 +67,6 @@ public class ISBNHandler {
         return length == 13 && format.equals(ISBNVersion.THIRTEEN_DIGIT);
     }
 
-    // TODO: FINISH THE METHOD AND WRITE TESTS
-    public void tenDigitToThirteenDigit(String value) {
-        throw new UnsupportedOperationException("Implement the method");
-    }
-
     public String formatValue(String value) {
         return value.replace("-", "").replace(" ", "").strip();
     }
