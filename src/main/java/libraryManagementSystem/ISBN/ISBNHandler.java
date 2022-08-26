@@ -38,8 +38,7 @@ public class ISBNHandler {
         total += (lastDigit == 'X') ? 10 : lastDigit - '0';
         return total % 11 == 0;
     }
-
-    // TODO: FINISH THE METHOD AND WRITE TESTS
+    
     private boolean verifyValueOfThirteen(String value) {
         int sum = 0;
         boolean multiplyByThree = false;
