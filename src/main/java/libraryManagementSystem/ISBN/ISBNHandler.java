@@ -41,7 +41,23 @@ public class ISBNHandler {
 
     // TODO: FINISH THE METHOD AND WRITE TESTS
     private boolean verifyValueOfThirteen(String value) {
-        throw new UnsupportedOperationException("Implement the method");
+        int sum = 0;
+        boolean multiplyByThree = false;
+
+        // Verify value only contains 13 digits
+        if (!value.matches("[0-9]{13}")) {
+            return false;
+        }
+
+        // Each of the digits of the ISBN is multiplied by either 1 or 3 and added to sum
+        for (int i = 0; i < 13; i++) {
+            int multiplier = (multiplyByThree) ? 3 : 1;
+
+            sum += (value.charAt(i) - '0') * multiplier;
+            multiplyByThree = !multiplyByThree;
+        }
+
+        return sum % 10 == 0;
     }
 
     public boolean verifyVersion(int length, ISBNVersion format) {

@@ -25,7 +25,17 @@ public class ISBNHandlerTest {
 
     @Test
     public void testFormatValueWithWhiteSpaces() {
-        assertEquals("3125657512", handler.formatValue("\n3-12-   565751-2\t"));
+        assertEquals("3125657512", handler.formatValue("\n3-12-   565  751-2\t"));
+    }
+
+    @Test
+    public void testFormatValueThirteen() {
+        assertEquals("8697236447109", handler.formatValue("8-697236-447109"));
+    }
+
+    @Test
+    public void testFormatValueThirteenWithWhiteSpaces() {
+        assertEquals("9781617292231", handler.formatValue("\n9-78  1617-    292 231\t"));
     }
 
     @Test
@@ -54,6 +64,11 @@ public class ISBNHandlerTest {
     }
 
     @Test
+    public void testVerifyInvalidValueWithTenWithInvalidChars() {
+        assertFalse(handler.verifyValue("1-6y72a-2/3-2"));
+    }
+
+    @Test
     public void testVerifyInvalidValueWithTenWithoutDashes() {
         assertFalse(handler.verifyValue("1617292232"));
     }
@@ -61,6 +76,11 @@ public class ISBNHandlerTest {
     @Test
     public void testVerifyInvalidValueWithTenIncludingX() {
         assertFalse(handler.verifyValue("1-61729-223-X"));
+    }
+
+    @Test
+    public void testVerifyInvalidValueWithTenIncludingXAndInvalidChars() {
+        assertFalse(handler.verifyValue("1-b1729-2a3-X"));
     }
 
     @Test
@@ -106,6 +126,26 @@ public class ISBNHandlerTest {
     @Test
     public void testVerifyVersionTenWithInValidLength() {
         assertFalse(handler.verifyVersion(8, ISBNVersion.TEN_DIGIT));
+    }
+
+    @Test
+    public void testVerifyValidValueWithThirteen() {
+        assertTrue(handler.verifyValue("978-0-306-40615-7"));
+    }
+
+    @Test
+    public void testVerifyValidValueWithThirteenWithoutDashes() {
+        assertTrue(handler.verifyValue("9780306406157"));
+    }
+
+    @Test
+    public void testVerifyInvalidValueWithThirteen() {
+        assertFalse(handler.verifyValue("8-697236-447101"));
+    }
+
+    @Test
+    public void testVerifyInvalidValueWithThirteenWithInvalidChars() {
+        assertFalse(handler.verifyValue("9-781617-29223X"));
     }
 }
 
