@@ -1,4 +1,4 @@
-package libraryManagementSystem.ISBN;
+package libraryManagementSystem.isbn;
 
 public class ISBNHandler {
     public boolean verifyValue(String value) {

@@ -1,4 +1,4 @@
-package libraryManagementSystem.ISBN;
+package libraryManagementSystem.isbn;
 
 import org.junit.Test;
 
