@@ -1,7 +1,5 @@
 package libraryManagementSystem.domain;
 
-import java.util.Locale;
-
 public class Address {
     private String streetAddress;
     private String city;
@@ -59,12 +57,11 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address ↴\n" +
-                "\tStreet Address: " + "'" + streetAddress + "'\n" +
-                "\tCity: " + "'" + city + "'\n" +
-                "\tState: " + "'" + state + "'\n" +
-                "\tZipCode: " + "'" + zipcode + "'\n" +
-                "\tCountry: " + "'" + country + "'\n";
+        return "Street Address: " + "'" + streetAddress + "'\n" +
+                "City: " + "'" + city + "'\n" +
+                "State: " + "'" + state + "'\n" +
+                "ZipCode: " + "'" + zipcode + "'\n" +
+                "Country: " + "'" + country + "'\n";
     }
 }
 

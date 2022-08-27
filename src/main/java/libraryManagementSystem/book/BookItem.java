@@ -5,8 +5,9 @@ import libraryManagementSystem.isbn.ISBN;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-//TODO: FINISH IMPLEMENTING THE CLASS
+// TODO: FINISH IMPLEMENTING THE CLASS
 
+/*
 public class BookItem extends Book{
     private LocalDate borrowed;
     private LocalDate dueDate;
@@ -31,3 +32,4 @@ public class BookItem extends Book{
         this.publicationDate = publicationDate;
     }
 }
+*/
