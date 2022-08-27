@@ -3,8 +3,6 @@ package libraryManagementSystem.human;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-//TODO: TEST THE FOLLOWING METHODS: setDeathDate, getAge, toString.
-
 public abstract class Person {
     private final LocalDate birthDate;
     private String firstName;
@@ -12,12 +10,17 @@ public abstract class Person {
     private LocalDate deathDate;
     private String gender;
 
+    private final IllegalArgumentException illegalNameChange;
+
     public Person(String firstName, String secondName, LocalDate birthDate, LocalDate deathDate, String gender) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.birthDate = birthDate;
         this.gender = gender;
         setDeathDate(deathDate);
+        illegalNameChange = new IllegalArgumentException(
+                "\nERROR\n  Can't change a dead person's name"
+        );
     }
 
     public String getFirstName() {
@@ -25,6 +28,10 @@ public abstract class Person {
     }
 
     public void setFirstName(String firstName) {
+        if (deathDate != null) {
+            throw illegalNameChange;
+        }
+
         this.firstName = firstName;
     }
 
@@ -33,6 +40,10 @@ public abstract class Person {
     }
 
     public void setSecondName(String secondName) {
+        if (deathDate != null) {
+            throw illegalNameChange;
+        }
+
         this.secondName = secondName;
     }
 
@@ -45,6 +56,11 @@ public abstract class Person {
     }
 
     public void setDeathDate(LocalDate deathDate) {
+        if (deathDate == null) {
+            this.deathDate = null;
+            return;
+        }
+
         if (deathDate.isBefore(birthDate)) {
             throw new IllegalArgumentException(
                     "\nError\n  Date of death cannot be earlier then date of birth"
@@ -59,16 +75,23 @@ public abstract class Person {
     }
 
     public void setGender(String gender) {
+        if (deathDate != null) {
+            throw new IllegalArgumentException(
+                    "\nERROR\n  Can't change a dead person's gender"
+            );
+        }
+
         this.gender = gender;
     }
 
     public int getAge() {
         LocalDate currentDate = LocalDate.now();
-        int age = currentDate.getYear() - birthDate.getYear();
 
         if (deathDate != null) {
             currentDate = deathDate;
         }
+
+        int age = currentDate.getYear() - birthDate.getYear();
 
         if (currentDate.minusYears(age).isBefore(birthDate)) {
             age--;
@@ -83,11 +106,27 @@ public abstract class Person {
         String birthDate = this.birthDate.format(formatter);
         String deathDate = (this.deathDate == null) ? "-" : this.deathDate.format(formatter);
 
-        return "Person ↴\n" +
-                "\tFull Name: " + "'" + firstName + " " + secondName + "'\n" +
-                "\tDate of Birth: " + "'" + birthDate + "'\n" +
-                "\tAge: " + "'" + getAge() + "'\n" +
-                "\tDate of Death: " + "'" + deathDate + "'\n" +
-                "\tGender: " + "'" + gender + "'\n";
+        return "Full Name: " + "'" + firstName + " " + secondName + "'\n" +
+                "Date of Birth: " + "'" + birthDate + "'\n" +
+                "Age: " + "'" + getAge() + "'\n" +
+                "Date of Death: " + "'" + deathDate + "'\n" +
+                "Gender: " + "'" + gender + "'\n";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Author comparedPerson)) {
+            return false;
+        }
+
+        return this.firstName.equals(comparedPerson.getFirstName()) &&
+                this.secondName.equals(comparedPerson.getSecondName()) &&
+                this.birthDate == comparedPerson.getBirthDate() &&
+                this.getAge() == comparedPerson.getAge() &&
+                this.gender.equals(comparedPerson.getGender());
     }
 }

@@ -8,16 +8,17 @@ import java.util.ArrayList;
 public class Book {
     private final ISBN isbn;
     private final ArrayList<String> subjects;
+    private final ArrayList<String> authors;
     private final String language;
     private String title;
-    private Author author;
     private String publisher;
     private int numberOfPages;
 
-    public Book(ISBN isbn, String title, ArrayList<String> subjects, String publisher, String language, int numberOfPages) {
+    public Book(ISBN isbn, String title, String publisher, String language, int numberOfPages) {
         this.isbn = isbn;
         this.title = title;
-        this.subjects = subjects;
+        this.subjects = new ArrayList<>();
+        this.authors = new ArrayList<>();
         this.publisher = publisher;
         this.language = language;
         this.numberOfPages = numberOfPages;
@@ -39,16 +40,16 @@ public class Book {
         return subjects;
     }
 
-    public void addSubject(ArrayList<String> subjects) {
-        subjects.stream()
-                .filter(subject -> !this.subjects.contains(subject))
-                .forEach(this.subjects::add);
-    }
-
     public void addSubject(String subject) {
         if (!subjects.contains(subject)) {
             this.subjects.add(subject);
         }
+    }
+
+    public void addSubject(ArrayList<String> subjects) {
+        subjects.stream()
+                .filter(subject -> !this.subjects.contains(subject))
+                .forEach(this.subjects::add);
     }
 
     public void deleteSubject(String subject) {
@@ -57,6 +58,24 @@ public class Book {
 
     public void deleteSubject(ArrayList<String> subject) {
         this.subjects.removeAll(subject);
+    }
+
+    public ArrayList<String> getAuthors() {
+        return authors;
+    }
+
+    public void addAuthor(Author author) {
+        String fullName = author.getFirstName() + " " + author.getSecondName();
+        if (!authors.contains(fullName)) {
+            authors.add(fullName);
+        }
+    }
+
+    public void addAuthor(ArrayList<Author> authors) {
+        authors.stream()
+                .filter(author -> !this.authors.contains(
+                        author.getFirstName() + " " + author.getSecondName()))
+                .forEach(this::addAuthor);
     }
 
     public String getPublisher() {
@@ -81,11 +100,24 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book ↴\n" +
-                "\tTitle: " + "'" + title + "'" +
-                "\tSubjects: " + "'" + subjects + "'\n" +
-                "\tPublisher: " + "'" + publisher + "'\n" +
-                "\tLanguage: " + "'" + language + "'\n" +
-                "\tPages: " + "'" + numberOfPages + "'";
+        return "Title: " + "'" + title + "'\n" +
+                "Subjects: " + "'" + subjects + "'\n" +
+                "Authors: " + "'" + authors + "'\n" +
+                "Publisher: " + "'" + publisher + "'\n" +
+                "Language: " + "'" + language + "'\n" +
+                "Pages: " + "'" + numberOfPages + "'";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Book comparedBook)) {
+            return false;
+        }
+
+        return this.isbn.equals(comparedBook.getIsbn());
     }
 }
