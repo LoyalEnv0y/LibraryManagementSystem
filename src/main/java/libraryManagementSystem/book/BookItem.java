@@ -5,56 +5,39 @@ import libraryManagementSystem.isbn.ISBN;
 import javax.naming.SizeLimitExceededException;
 import java.time.LocalDate;
 
-import static libraryManagementSystem.book.BookStatus.AVAILABLE;
-import static libraryManagementSystem.book.BookStatus.REFUNDED;
-import static libraryManagementSystem.book.BookStatus.SOLD;
+import static libraryManagementSystem.book.BookStatus.*;
 
-// TODO: WRITE TESTS
-
-public class BookItem extends Book {
-    private  int id;
+public class BookItem extends Book implements Cloneable {
     private static int numberOfBookItems = 0;
     private final BookFormat format;
+    private int id;
     private BookStatus status;
     private double price;
     private LocalDate dateOfBorrow;
     private LocalDate dateOfDue;
 
     public BookItem(ISBN isbn, String title, String publisher, String language,
-                    int numberOfPages, BookStatus status, BookFormat format,
+                    int numberOfPages, BookFormat format,
                     double price) {
 
         super(isbn, title, publisher, language, numberOfPages);
         numberOfBookItems++;
         setId();
-        this.status = status;
+        this.status = AVAILABLE;
         this.format = format;
         this.price = price;
     }
 
-    public BookItem(ISBN isbn, String title, String publisher, String language,
-                    int numberOfPages, BookStatus status, BookFormat format,
-                    double price, LocalDate dateOfBorrow) {
-
-        this(isbn, title, publisher, language, numberOfPages, status, format, price);
-
-        this.dateOfBorrow = dateOfBorrow;
-        if (this.status != BookStatus.SOLD) {
-            // Default due date
-            dateOfDue = dateOfBorrow.plusDays(1);
-        }
+    public static int getNumberOfBookItems() {
+        return numberOfBookItems;
     }
 
     private void setId() {
         this.id = 1000 + numberOfBookItems;
     }
 
-    private int getId() {
+    public int getId() {
         return id;
-    }
-
-    public static int getNumberOfBookItems() {
-        return numberOfBookItems;
     }
 
     public BookStatus getStatus() {
@@ -62,7 +45,7 @@ public class BookItem extends Book {
     }
 
     public void setStatus(BookStatus status) {
-        IllegalStateException illegalStatus = new IllegalStateException(
+        IllegalStateException stateException = new IllegalStateException(
                 "\nERROR\n  When the status is " + this.status +
                         " it cannot be set to " + status
         );
@@ -70,19 +53,19 @@ public class BookItem extends Book {
         switch (this.status) {
             // When a book is Available it cannot be set to Refunded
             case AVAILABLE -> {
-                if (status == REFUNDED) throw illegalStatus;
+                if (status == REFUNDED) throw stateException;
             }
             // When a book is Sold it can ONLY be set to Refunded
             case SOLD -> {
-                if (status != REFUNDED) throw illegalStatus;
+                if (status != REFUNDED) throw stateException;
             }
             // When a book is Lost it can only be set to Available (in case it is found)
             case LOST -> {
-                if (status != AVAILABLE) throw illegalStatus;
+                if (status != AVAILABLE) throw stateException;
             }
-            // When a book is Loaned it cannot be set to Refunded or Sold
+            // When a book is Loaned it cannot be set to Sold
             case LOANED -> {
-                if (status == REFUNDED || status == SOLD) throw illegalStatus;
+                if (status == SOLD) throw stateException;
             }
         }
 
@@ -99,10 +82,9 @@ public class BookItem extends Book {
     }
 
     public void setPrice(double price) throws SizeLimitExceededException {
-        if (price < 0 || price > Integer.MAX_VALUE) {
+        if (price < 0) {
             throw new SizeLimitExceededException(
-                    "\nERROR\n  Price limit exceeded. -> " +
-                            "[" + 0 + ", " + Integer.MAX_VALUE + "]"
+                    "\nERROR\n  Price cannot be negative."
             );
         }
         this.price = price;
@@ -113,7 +95,7 @@ public class BookItem extends Book {
     }
 
     public void setDateOfBorrow(LocalDate dateOfBorrow) {
-        if (status != AVAILABLE && status != REFUNDED) {
+        if (status == LOST || status == SOLD) {
             throw new IllegalStateException(
                     "\nERROR\n  Cannot set the date of borrow " +
                             "of a book when it is " + this.status
@@ -131,6 +113,13 @@ public class BookItem extends Book {
             throw new IllegalStateException(
                     "\nERROR\n  When the date of borrow is null " +
                             "setting date of due is not possible"
+            );
+        }
+
+        if (dateOfBorrow.isAfter(dateOfDue)) {
+            throw new IllegalArgumentException(
+                    "\nERROR\n  Date of due cannot be earlier then " +
+                            "date of barrow"
             );
         }
 
@@ -162,5 +151,18 @@ public class BookItem extends Book {
         }
 
         return this.getId() == comparedBookItem.getId();
+    }
+
+    @Override
+    public BookItem clone() {
+        return new BookItem(
+                getIsbn(),
+                getTitle(),
+                getPublisher(),
+                getLanguage(),
+                getNumberOfPages(),
+                getFormat(),
+                getPrice()
+        );
     }
 }
