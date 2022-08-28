@@ -12,6 +12,8 @@ import static libraryManagementSystem.book.BookStatus.SOLD;
 // TODO: WRITE TESTS
 
 public class BookItem extends Book {
+    private  int id;
+    private static int numberOfBookItems = 0;
     private final BookFormat format;
     private BookStatus status;
     private double price;
@@ -23,6 +25,8 @@ public class BookItem extends Book {
                     double price) {
 
         super(isbn, title, publisher, language, numberOfPages);
+        numberOfBookItems++;
+        setId();
         this.status = status;
         this.format = format;
         this.price = price;
@@ -39,6 +43,18 @@ public class BookItem extends Book {
             // Default due date
             dateOfDue = dateOfBorrow.plusDays(1);
         }
+    }
+
+    private void setId() {
+        this.id = 1000 + numberOfBookItems;
+    }
+
+    private int getId() {
+        return id;
+    }
+
+    public static int getNumberOfBookItems() {
+        return numberOfBookItems;
     }
 
     public BookStatus getStatus() {
@@ -119,5 +135,32 @@ public class BookItem extends Book {
         }
 
         this.dateOfDue = dateOfDue;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "Format: " + "'" + format + "'\n" +
+                "Status: " + "'" + status + "'\n" +
+                "Price: " + "'" + price + "'\n" +
+                "Date of Borrow: " + "'" + dateOfBorrow + "'\n" +
+                "Date of Due: " + "'" + dateOfDue + "'";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null) {
+            return false;
+        }
+
+        if (!(o instanceof BookItem comparedBookItem)) {
+            return false;
+        }
+
+        return this.getId() == comparedBookItem.getId();
     }
 }

@@ -114,6 +114,10 @@ public class Book {
             return true;
         }
 
+        if (obj == null) {
+            return false;
+        }
+
         if (!(obj instanceof Book comparedBook)) {
             return false;
         }
