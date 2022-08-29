@@ -3,6 +3,8 @@ package libraryManagementSystem.human;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+// TODO WRITE TESTS FOR THE setDeathDate() METHOD AND ADD A CHECK TO SEE IF THE BIRTH DATE IS NULL
+
 public abstract class Person {
     private final LocalDate birthDate;
     private String firstName;
