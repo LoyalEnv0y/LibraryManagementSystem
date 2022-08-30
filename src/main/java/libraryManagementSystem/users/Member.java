@@ -5,11 +5,10 @@ import libraryManagementSystem.book.BookItem;
 import libraryManagementSystem.domain.Address;
 import libraryManagementSystem.human.Person;
 
+import static libraryManagementSystem.account.AccountStatus.*;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Member extends Person {
     private static int instanceCount = 0;
@@ -41,7 +40,7 @@ public class Member extends Person {
     }
 
     private void setId() {
-        this.id = "M" + instanceCount + 1000;
+        this.id = "M" + (instanceCount + 1000);
     }
 
     public Address getAddress() {
@@ -49,6 +48,7 @@ public class Member extends Person {
     }
 
     public void setAddress(Address address) {
+        checkAccountStatus("change address");
         this.address = address;
     }
 
@@ -57,11 +57,21 @@ public class Member extends Person {
     }
 
     public void addLeasedBook(BookItem leasedBook, int leasedDays) {
+        checkAccountStatus("lease a book");
         leasedBooks.putIfAbsent(leasedBook, leasedDays);
     }
 
     public void addLeasedBook(Map<BookItem, Integer> leasedBooks) {
+        checkAccountStatus("lease a book");
         leasedBooks.forEach(this.leasedBooks::putIfAbsent);
+    }
+
+    public void removeLeasedBook(BookItem leasedBook) {
+        leasedBooks.remove(leasedBook);
+    }
+
+    public void removeLeasedBook(Map<BookItem, Integer> leasedBooks) {
+        leasedBooks.keySet().forEach(this.leasedBooks::remove);
     }
 
     public List<BookItem> getBoughtBooks() {
@@ -69,19 +79,40 @@ public class Member extends Person {
     }
 
     public void addBoughtBook(BookItem boughtBook) {
+        checkAccountStatus("buy a book");
+
         if (!boughtBooks.contains(boughtBook)) {
             boughtBooks.add(boughtBook);
         }
     }
 
     public void addBoughtBook(List<BookItem> boughtBooks) {
+        checkAccountStatus("buy books");
+
         boughtBooks.stream()
                 .filter(boughtBook -> !this.boughtBooks.contains(boughtBook))
                 .forEach(this.boughtBooks::add);
     }
 
+    public void removeBoughtBook(BookItem boughtBook) {
+        boughtBooks.remove(boughtBook);
+    }
+
+    public void removeBoughtBook(List<BookItem> boughtBooks) {
+        boughtBooks.forEach(this.boughtBooks::remove);
+    }
+
     public Account getAccount() {
         return account;
+    }
+
+    private void checkAccountStatus(String act) {
+        if (account.getAccountStatus() != ACTIVE) {
+            throw new IllegalStateException(
+                    "\nERROR\n  Cannot " + act +
+                            " while account is not active"
+            );
+        }
     }
 
     @Override

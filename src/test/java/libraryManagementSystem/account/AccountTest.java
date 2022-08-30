@@ -49,7 +49,7 @@ public class AccountTest {
 
     @Test
     public void testSetUserNameWithInvalidAccountStatus() {
-        memberAccount.setStatus(BANNED);
+        memberAccount.setAccountStatus(BANNED);
 
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
@@ -57,7 +57,7 @@ public class AccountTest {
         );
 
         assertEquals("\nERROR\n  Cannot change username while " +
-                "account" + "is not active", exception.getMessage()
+                "account is not active", exception.getMessage()
         );
     }
 
@@ -70,7 +70,7 @@ public class AccountTest {
 
     @Test
     public void testSetPasswordWithInvalidAccountStatus() {
-        memberAccount.setStatus(BANNED);
+        memberAccount.setAccountStatus(BANNED);
 
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
@@ -78,7 +78,7 @@ public class AccountTest {
         );
 
         assertEquals("\nERROR\n  Cannot change password while " +
-                "account" + "is not active", exception.getMessage()
+                "account is not active", exception.getMessage()
         );
     }
 }
