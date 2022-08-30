@@ -46,6 +46,12 @@ public class Account {
     }
 
     public void setUserName(String userName) {
+        if (status != ACTIVE) {
+            throw new IllegalStateException(
+                    "\nERROR\n  Cannot change username while account" +
+                            "is not active"
+            );
+        }
         this.userName = userName;
     }
 
@@ -54,6 +60,13 @@ public class Account {
     }
 
     public void setPassword(String password) {
+        if (status != ACTIVE) {
+            throw new IllegalStateException(
+                    "\nERROR\n  Cannot change password while account" +
+                            "is not active"
+            );
+        }
+
         this.password = password;
     }
 
