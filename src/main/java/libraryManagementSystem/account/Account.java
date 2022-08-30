@@ -11,14 +11,14 @@ public class Account {
     private static int instanceCount = 0;
     private String userName;
     private String password;
-    private AccountStatus status;
+    private AccountStatus accountStatus;
     private AccountType accountType;
 
     public Account(String userName, String password, String ownerId, AccountType accountType) {
         this.createdAt = LocalDateTime.now();
         this.userName = userName;
         this.password = password;
-        this.status = ACTIVE;
+        this.accountStatus = ACTIVE;
         this.ownerId = ownerId;
         this.accountType = accountType;
         instanceCount++;
@@ -46,9 +46,9 @@ public class Account {
     }
 
     public void setUserName(String userName) {
-        if (status != ACTIVE) {
+        if (accountStatus != ACTIVE) {
             throw new IllegalStateException(
-                    "\nERROR\n  Cannot change username while account" +
+                    "\nERROR\n  Cannot change username while account " +
                             "is not active"
             );
         }
@@ -60,9 +60,9 @@ public class Account {
     }
 
     public void setPassword(String password) {
-        if (status != ACTIVE) {
+        if (accountStatus != ACTIVE) {
             throw new IllegalStateException(
-                    "\nERROR\n  Cannot change password while account" +
+                    "\nERROR\n  Cannot change password while account " +
                             "is not active"
             );
         }
@@ -70,12 +70,12 @@ public class Account {
         this.password = password;
     }
 
-    public AccountStatus getStatus() {
-        return status;
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
     }
 
-    public void setStatus(AccountStatus status) {
-        this.status = status;
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
     }
 
     public String  getOwnerId() {

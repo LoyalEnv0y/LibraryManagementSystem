@@ -32,7 +32,7 @@ public class Librarian extends Person {
     }
 
     private void setId() {
-        this.id = "L" + instanceCount + 1000;
+        this.id = "L" + (instanceCount + 1000);
     }
 
     public Account getAccount() {
