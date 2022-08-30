@@ -3,16 +3,15 @@ package libraryManagementSystem.human;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-// TODO WRITE TESTS FOR THE setDeathDate() METHOD AND ADD A CHECK TO SEE IF THE BIRTH DATE IS NULL
+
 
 public abstract class Person {
     private final LocalDate birthDate;
+    private final IllegalArgumentException illegalNameChange;
     private String firstName;
     private String secondName;
     private LocalDate deathDate;
     private String gender;
-
-    private final IllegalArgumentException illegalNameChange;
 
     public Person(String firstName, String secondName, LocalDate birthDate, LocalDate deathDate, String gender) {
         this.firstName = firstName;
