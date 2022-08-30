@@ -120,8 +120,6 @@ public class BookItemTest {
                         }
                     }
                 }
-
-                System.out.println(status + " " + statusToBeSet);
                 testBook.setStatus(statusToBeSet);
                 assertEquals(statusToBeSet, testBook.getStatus());
             }

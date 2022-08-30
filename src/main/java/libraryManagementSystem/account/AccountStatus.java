@@ -1,7 +1,7 @@
-package libraryManagementSystem.member;
+package libraryManagementSystem.account;
 
 public enum AccountStatus {
     ACTIVE,
     FROZEN,
-    BANNED
+    BANNED,
 }
