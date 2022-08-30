@@ -1,31 +1,26 @@
 package libraryManagementSystem.account;
 
-import libraryManagementSystem.human.Person;
-import libraryManagementSystem.users.Member;
-
 import static libraryManagementSystem.account.AccountStatus.*;
 
 import java.time.LocalDateTime;
 
-// TODO WHEN YOU IMPLEMENT THE LIBRARIAN METHOD CHANGE THE 26TH LINE
-
 public class Account {
     private final LocalDateTime createdAt;
-    private final Person owner;
+    private final int ownerId;
     private int accountNumber;
     private static int instanceCount = 0;
     private String userName;
     private String password;
     private AccountStatus status;
-    private boolean isAdmin;
+    private AccountType accountType;
 
-    public Account(String userName, String password, Person owner) {
+    public Account(String userName, String password, int ownerId, AccountType accountType) {
         this.createdAt = LocalDateTime.now();
         this.userName = userName;
         this.password = password;
         this.status = ACTIVE;
-        this.owner = owner;
-        this.isAdmin = owner.getClass() != Member.class;
+        this.ownerId = ownerId;
+        this.accountType = accountType;
         instanceCount++;
         setAccountNumber();
     }
@@ -70,15 +65,36 @@ public class Account {
         this.status = status;
     }
 
-    public Person getOwner() {
-        return owner;
+    public int getOwnerId() {
+        return ownerId;
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return accountType == AccountType.ADMIN;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof Account comparedAccount)) {
+            return false;
+        }
+
+        return this.accountNumber == comparedAccount.getAccountNumber();
     }
 }
