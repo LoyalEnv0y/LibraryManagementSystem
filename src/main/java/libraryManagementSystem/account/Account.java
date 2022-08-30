@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class Account {
     private final LocalDateTime createdAt;
-    private final int ownerId;
+    private final String ownerId;
     private int accountNumber;
     private static int instanceCount = 0;
     private String userName;
@@ -14,7 +14,7 @@ public class Account {
     private AccountStatus status;
     private AccountType accountType;
 
-    public Account(String userName, String password, int ownerId, AccountType accountType) {
+    public Account(String userName, String password, String ownerId, AccountType accountType) {
         this.createdAt = LocalDateTime.now();
         this.userName = userName;
         this.password = password;
@@ -65,7 +65,7 @@ public class Account {
         this.status = status;
     }
 
-    public int getOwnerId() {
+    public String  getOwnerId() {
         return ownerId;
     }
 

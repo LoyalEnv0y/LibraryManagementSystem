@@ -16,11 +16,11 @@ public class Member extends Person {
     private final Map<BookItem, Integer> leasedBooks;
     private final List<BookItem> boughtBooks;
     private final Account account;
-    private int id;
+    private String id;
     private Address address;
 
-    public Member(String firstName, String secondName, LocalDate birthDate, String gender,
-                  Address address, Account account) {
+    public Member(String firstName, String secondName, LocalDate birthDate,
+                  String gender, Address address, Account account) {
         super(firstName, secondName, birthDate, null, gender);
 
         instanceCount++;
@@ -36,12 +36,12 @@ public class Member extends Person {
         return instanceCount;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
     private void setId() {
-        this.id = instanceCount + 1000;
+        this.id = "M" + instanceCount + 1000;
     }
 
     public Address getAddress() {
@@ -108,6 +108,6 @@ public class Member extends Person {
             return false;
         }
 
-        return this.id == comparedMember.getId();
+        return this.id.equals(comparedMember.getId());
     }
 }
