@@ -1,7 +1,7 @@
 package libraryManagementSystem.account;
 
 import libraryManagementSystem.human.Person;
-import libraryManagementSystem.member.Member;
+import libraryManagementSystem.users.Member;
 
 import static libraryManagementSystem.account.AccountStatus.*;
 
@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 public class Account {
     private final LocalDateTime createdAt;
     private final Person owner;
+    private int accountNumber;
+    private static int instanceCount = 0;
     private String userName;
     private String password;
     private AccountStatus status;
@@ -24,6 +26,20 @@ public class Account {
         this.status = ACTIVE;
         this.owner = owner;
         this.isAdmin = owner.getClass() != Member.class;
+        instanceCount++;
+        setAccountNumber();
+    }
+
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber() {
+        this.accountNumber = instanceCount + 1000;
+    }
+
+    public static int getInstanceCount() {
+        return instanceCount;
     }
 
     public LocalDateTime getCreatedAt() {
