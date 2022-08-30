@@ -1,4 +1,6 @@
 package libraryManagementSystem.member;
+
+import libraryManagementSystem.account.Account;
 import libraryManagementSystem.book.BookItem;
 import libraryManagementSystem.domain.Address;
 import libraryManagementSystem.human.Person;
@@ -13,7 +15,7 @@ public class Member extends Person {
     private Address address;
     private Map<BookItem, Integer> leasedBooks;
     private List<BookItem> boughtBooks;
-    private AccountStatus accountStatus;
+    private Account account;
 
     public Member(String firstName, String secondName,
                   LocalDate birthDate, String gender) {
