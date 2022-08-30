@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 public class AuthorTest {
     private final Author author;
     private final Book book1;

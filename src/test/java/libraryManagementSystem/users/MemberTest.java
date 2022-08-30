@@ -24,7 +24,6 @@ public class MemberTest {
     private final BookItem leasedBook2;
     private final BookItem boughtBook1;
     private final BookItem boughtBook2;
-    private final Address address;
     private final Address address2;
     private final Member member;
 
@@ -49,7 +48,7 @@ public class MemberTest {
         boughtBook2 = boughtBook1.clone();
         boughtBook2.setTitle("Book D");
 
-        address = new Address(
+        Address address = new Address(
                 "Example Street", "Example City",
                 "Example State", "12344", "Example Country"
         );
@@ -88,7 +87,7 @@ public class MemberTest {
         );
 
         assertEquals("\nERROR\n  Cannot change address while " +
-                        "account is not active", exception.getMessage()
+                "account is not active", exception.getMessage()
         );
     }
 
@@ -145,7 +144,6 @@ public class MemberTest {
 
         assertNull(member.getLeasedBooks().get(leasedBook1));
         assertNull(member.getLeasedBooks().get(leasedBook2));
-
     }
 
     @Test
@@ -219,6 +217,5 @@ public class MemberTest {
 
         assertFalse(member.getBoughtBooks().contains(boughtBook1));
         assertFalse(member.getBoughtBooks().contains(boughtBook2));
-
     }
 }

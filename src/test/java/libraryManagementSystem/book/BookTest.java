@@ -10,9 +10,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 public class BookTest {
-
     private final Book book;
     private final Author author1;
     private final Author author2;
@@ -74,7 +72,7 @@ public class BookTest {
         book.addSubject(subjects);
         book.deleteSubject(subjectsToBeDeleted);
 
-        assertEquals(subjects.size()-subjectsToBeDeleted.size(),
+        assertEquals(subjects.size() - subjectsToBeDeleted.size(),
                 book.getSubjects().size()
         );
     }

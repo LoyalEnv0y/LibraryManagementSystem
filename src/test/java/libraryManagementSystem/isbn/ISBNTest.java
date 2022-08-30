@@ -135,8 +135,6 @@ public class ISBNTest {
         );
     }
 
-    // *************************************************
-
     @Test
     public void testInitializeValidISBNThirteen() {
         start("8699118040781", ISBNVersion.THIRTEEN_DIGIT);
@@ -254,5 +252,4 @@ public class ISBNTest {
                 exception.getMessage()
         );
     }
-
 }
