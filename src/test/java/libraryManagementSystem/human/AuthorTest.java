@@ -56,6 +56,5 @@ public class AuthorTest {
         author.addBook(books);
 
         assertEquals(2, author.getBooks().size());
-        System.out.println(author);
     }
 }
