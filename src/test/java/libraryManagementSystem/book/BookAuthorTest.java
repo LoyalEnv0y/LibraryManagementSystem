@@ -1,6 +1,7 @@
-package libraryManagementSystem.human;
+package libraryManagementSystem.book;
 
 import libraryManagementSystem.book.Book;
+import libraryManagementSystem.book.BookAuthor;
 import libraryManagementSystem.isbn.ISBN;
 import libraryManagementSystem.isbn.ISBNVersion;
 import org.junit.jupiter.api.Test;
@@ -10,13 +11,13 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AuthorTest {
-    private final Author author;
+public class BookAuthorTest {
+    private final BookAuthor author;
     private final Book book1;
     private final Book book2;
 
-    public AuthorTest() {
-        this.author = new Author("Alive", "Author",
+    public BookAuthorTest() {
+        this.author = new BookAuthor("Alive", "Author",
                 LocalDate.of(1970, 6, 22),
                 null,
                 "Male");

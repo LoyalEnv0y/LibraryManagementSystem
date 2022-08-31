@@ -1,17 +1,16 @@
-package libraryManagementSystem.human;
+package libraryManagementSystem.book;
 
-import libraryManagementSystem.book.Book;
+import libraryManagementSystem.users.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Author extends Person implements Cloneable {
+public class BookAuthor extends Person implements Cloneable {
     private final ArrayList<Book> books;
 
-    public Author(String firstName, String secondName, LocalDate birthDate,
-                  LocalDate deathDate, String gender) {
+    public BookAuthor(String firstName, String secondName, LocalDate birthDate,
+                      LocalDate deathDate, String gender) {
         super(firstName, secondName, birthDate, deathDate, gender);
-
         this.books = new ArrayList<>();
     }
 
@@ -48,9 +47,9 @@ public class Author extends Person implements Cloneable {
     }
 
     @Override
-    public Author clone() {
+    public BookAuthor clone() {
         try {
-            return (Author) super.clone();
+            return (BookAuthor) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

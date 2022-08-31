@@ -8,6 +8,6 @@ public class SortByPrice implements Comparator<BookItem> {
 
     @Override
     public int compare(BookItem book1, BookItem book2) {
-        return (int) (book1.getPrice() - book2.getPrice());
+        return Double.compare(book1.getPrice(), book2.getPrice());
     }
 }

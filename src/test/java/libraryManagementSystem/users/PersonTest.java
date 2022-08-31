@@ -1,5 +1,7 @@
-package libraryManagementSystem.human;
+package libraryManagementSystem.users;
 
+import libraryManagementSystem.book.BookAuthor;
+import libraryManagementSystem.users.Person;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -20,20 +22,20 @@ public class PersonTest {
     private final Person alivePerson;
 
     public PersonTest() {
-        deadPerson = new Author("Dead", "Person",
+        deadPerson = new BookAuthor("Dead", "Person",
                 LocalDate.of(1970, 6, 22),
                 LocalDate.of(2020, 7, 10),
                 "Male"
         );
 
-        deadPersonWithBudPeriod = new Author("Dead",
+        deadPersonWithBudPeriod = new BookAuthor("Dead",
                 "Person With Bud Period",
                 LocalDate.of(1970, 6, 22),
                 LocalDate.of(2020, 5, 10),
                 "Female"
         );
 
-        alivePerson = new Author("Alive", "Person",
+        alivePerson = new BookAuthor("Alive", "Person",
                 LocalDate.of(1970, 6, 22),
                 null,
                 "Male"

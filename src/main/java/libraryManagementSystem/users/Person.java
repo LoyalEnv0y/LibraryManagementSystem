@@ -1,4 +1,6 @@
-package libraryManagementSystem.human;
+package libraryManagementSystem.users;
+
+import libraryManagementSystem.book.BookAuthor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,8 +16,8 @@ public abstract class Person {
     private String gender;
 
     public Person(String firstName, String secondName, LocalDate birthDate, LocalDate deathDate, String gender) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+        this.firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
+        this.secondName = secondName.substring(0, 1).toUpperCase() + secondName.substring(1);
         this.birthDate = birthDate;
         this.gender = gender;
         setDeathDate(deathDate);
@@ -124,7 +126,7 @@ public abstract class Person {
             return false;
         }
 
-        if (!(obj instanceof Author comparedPerson)) {
+        if (!(obj instanceof BookAuthor comparedPerson)) {
             return false;
         }
 

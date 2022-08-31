@@ -2,8 +2,7 @@ package libraryManagementSystem.users;
 
 import libraryManagementSystem.account.Account;
 import libraryManagementSystem.book.BookItem;
-import libraryManagementSystem.domain.Address;
-import libraryManagementSystem.human.Person;
+import libraryManagementSystem.library.Address;
 
 import static libraryManagementSystem.account.AccountStatus.*;
 
