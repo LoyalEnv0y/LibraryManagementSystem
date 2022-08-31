@@ -1,8 +1,7 @@
 package libraryManagementSystem.users;
 
 import libraryManagementSystem.account.Account;
-import libraryManagementSystem.domain.Address;
-import libraryManagementSystem.human.Person;
+import libraryManagementSystem.library.Address;
 
 import java.time.LocalDate;
 

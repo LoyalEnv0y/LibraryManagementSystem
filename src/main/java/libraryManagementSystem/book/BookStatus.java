@@ -2,8 +2,8 @@ package libraryManagementSystem.book;
 
 public enum BookStatus {
     AVAILABLE,
-    SOLD,
-    REFUNDED,
     LOANED,
+    REFUNDED,
+    SOLD,
     LOST
 }

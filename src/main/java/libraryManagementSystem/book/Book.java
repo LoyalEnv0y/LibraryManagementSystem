@@ -1,9 +1,9 @@
 package libraryManagementSystem.book;
 
-import libraryManagementSystem.human.Author;
 import libraryManagementSystem.isbn.ISBN;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Book {
     private final ISBN isbn;
@@ -41,37 +41,48 @@ public class Book {
     }
 
     public void addSubject(String subject) {
-        if (!subjects.contains(subject)) {
-            this.subjects.add(subject);
+        String formattedSubject = subject.toUpperCase().strip();
+
+        if (!subjects.contains(formattedSubject)) {
+            this.subjects.add(formattedSubject);
         }
     }
 
     public void addSubject(ArrayList<String> subjects) {
-        subjects.stream()
+        List<String> formattedSubjects = subjects
+                .stream().map(subject -> subject.toUpperCase().strip())
+                .toList();
+
+        formattedSubjects.stream()
                 .filter(subject -> !this.subjects.contains(subject))
                 .forEach(this.subjects::add);
     }
 
     public void deleteSubject(String subject) {
-        this.subjects.remove(subject);
+        String formattedSubject = subject.toUpperCase().strip();
+        this.subjects.remove(formattedSubject);
     }
 
-    public void deleteSubject(ArrayList<String> subject) {
-        this.subjects.removeAll(subject);
+    public void deleteSubject(ArrayList<String> subjects) {
+        List<String> formattedSubjects = subjects
+                .stream().map(subject -> subject.toUpperCase().strip())
+                .toList();
+
+        this.subjects.removeAll(formattedSubjects);
     }
 
     public ArrayList<String> getAuthors() {
         return authors;
     }
 
-    public void addAuthor(Author author) {
+    public void addAuthor(BookAuthor author) {
         String fullName = author.getFirstName() + " " + author.getSecondName();
         if (!authors.contains(fullName)) {
             authors.add(fullName);
         }
     }
 
-    public void addAuthor(ArrayList<Author> authors) {
+    public void addAuthor(ArrayList<BookAuthor> authors) {
         authors.stream()
                 .filter(author -> !this.authors.contains(
                         author.getFirstName() + " " + author.getSecondName()))

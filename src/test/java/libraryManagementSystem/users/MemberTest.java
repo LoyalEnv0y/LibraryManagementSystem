@@ -3,7 +3,7 @@ package libraryManagementSystem.users;
 import libraryManagementSystem.account.Account;
 import libraryManagementSystem.book.BookFormat;
 import libraryManagementSystem.book.BookItem;
-import libraryManagementSystem.domain.Address;
+import libraryManagementSystem.library.Address;
 import libraryManagementSystem.isbn.ISBN;
 import libraryManagementSystem.isbn.ISBNVersion;
 import org.junit.jupiter.api.Test;

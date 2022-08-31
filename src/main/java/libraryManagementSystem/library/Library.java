@@ -1,4 +1,4 @@
-package libraryManagementSystem.domain;
+package libraryManagementSystem.library;
 
 import libraryManagementSystem.book.BookItem;
 import libraryManagementSystem.users.Librarian;

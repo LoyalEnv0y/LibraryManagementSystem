@@ -1,4 +1,4 @@
-package libraryManagementSystem.domain;
+package libraryManagementSystem.library;
 
 public class Address {
     private String streetAddress;
