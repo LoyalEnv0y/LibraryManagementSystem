@@ -99,7 +99,7 @@ public class Member extends Person {
     }
 
     public void removeBoughtBook(List<BookItem> boughtBooks) {
-        boughtBooks.forEach(this.boughtBooks::remove);
+        this.boughtBooks.removeAll(boughtBooks);
     }
 
     public Account getAccount() {
