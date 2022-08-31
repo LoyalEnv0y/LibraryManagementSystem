@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 import static libraryManagementSystem.book.BookStatus.*;
 
-public class BookItem extends Book implements Cloneable {
+public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
     private static int numberOfBookItems = 0;
     private final BookFormat format;
     private int id;
@@ -164,5 +164,10 @@ public class BookItem extends Book implements Cloneable {
                 getFormat(),
                 getPrice()
         );
+    }
+
+    @Override
+    public int compareTo(BookItem o) {
+        return this.id - o.id;
     }
 }

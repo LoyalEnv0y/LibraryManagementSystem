@@ -9,17 +9,15 @@ import java.time.LocalDate;
 public class Librarian extends Person {
     private static int instanceCount = 0;
     private String id;
-    private final Account account;
+    private Account account;
     private Address address;
 
     public Librarian(String firstName, String secondName, LocalDate birthDate,
-                     String gender, Address address, Account account) {
+                     String gender, Address address) {
         super(firstName, secondName, birthDate, null, gender);
 
         instanceCount++;
         setId();
-
-        this.account = account;
         this.address = address;
     }
 
@@ -37,6 +35,10 @@ public class Librarian extends Person {
 
     public Account getAccount() {
         return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Address getAddress() {

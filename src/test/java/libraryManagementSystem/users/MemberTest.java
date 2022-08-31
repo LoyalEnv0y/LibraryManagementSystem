@@ -29,7 +29,7 @@ public class MemberTest {
 
     public MemberTest() {
         Account account = new Account(
-                "exampleUser", "123123", "M123",
+                "exampleUser", "123123", "M1000",
                 MEMBER
         );
 
@@ -61,8 +61,10 @@ public class MemberTest {
         member = new Member(
                 "Will", "Smith",
                 LocalDate.of(1990, 6, 22),
-                "Male", address, account
+                "Male", address
         );
+
+        member.setAccount(account);
     }
 
     @Test

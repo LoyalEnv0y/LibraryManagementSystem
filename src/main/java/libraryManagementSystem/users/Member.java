@@ -14,19 +14,18 @@ public class Member extends Person {
     private static int instanceCount = 0;
     private final Map<BookItem, Integer> leasedBooks;
     private final List<BookItem> boughtBooks;
-    private final Account account;
+    private Account account;
     private String id;
     private Address address;
 
     public Member(String firstName, String secondName, LocalDate birthDate,
-                  String gender, Address address, Account account) {
+                  String gender, Address address) {
         super(firstName, secondName, birthDate, null, gender);
 
         instanceCount++;
         setId();
 
         this.address = address;
-        this.account = account;
         this.leasedBooks = new HashMap<>();
         this.boughtBooks = new ArrayList<>();
     }
@@ -104,6 +103,10 @@ public class Member extends Person {
 
     public Account getAccount() {
         return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     private void checkAccountStatus(String act) {
