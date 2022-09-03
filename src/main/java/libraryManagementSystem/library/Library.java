@@ -93,12 +93,8 @@ public class Library {
         return accountMap.get(accountId);
     }
 
-    public Account findAccount(Account account) {
-        return findAccount(account.getAccountId());
-    }
-
     public Account findAccount(User user) {
-        return findAccount(user.getAccount());
+        return findAccount(user.getAccount().getAccountId());
     }
 
     public Account findAccount(String userid) {

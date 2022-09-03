@@ -136,15 +136,6 @@ public class LibraryTest {
     }
 
     @Test
-    public void findAccountWithAccount() {
-        library.addUser(user1);
-
-        assertEquals(user1.getAccount(),
-                library.findAccount(user1.getAccount())
-        );
-    }
-
-    @Test
     public void findAccountWithUser() {
         library.addUser(user1);
 

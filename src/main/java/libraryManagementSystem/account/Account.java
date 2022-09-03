@@ -88,4 +88,21 @@ public class Account {
 
         this.accountStatus = accountStatus;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof Account comparedAccount)) {
+            return false;
+        }
+
+        return this.accountId == comparedAccount.getAccountId();
+    }
 }
