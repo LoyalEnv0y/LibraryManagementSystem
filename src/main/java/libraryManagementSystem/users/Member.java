@@ -1,36 +1,49 @@
 package libraryManagementSystem.users;
 
 import libraryManagementSystem.account.Account;
+import libraryManagementSystem.account.AccountType;
 import libraryManagementSystem.book.BookItem;
 import libraryManagementSystem.library.Address;
 
-import static libraryManagementSystem.account.AccountStatus.*;
-
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Member extends Person {
+public class Member extends Person implements User {
     private static int instanceCount = 0;
-    private final Map<BookItem, Integer> leasedBooks;
-    private final List<BookItem> boughtBooks;
-    private Account account;
+    private final HashMap<BookItem, Integer> leasedBooks;
+    private final ArrayList<BookItem> boughtBooks;
+    private final Account account;
+    private final AccountType accountType = AccountType.MEMBER;
     private String id;
     private Address address;
 
-    public Member(String firstName, String secondName, LocalDate birthDate,
-                  String gender, Address address) {
-        super(firstName, secondName, birthDate, null, gender);
+    public Member(String firstName, String secondName,
+                  LocalDate birthDate, String gender,
+                  Address address) {
+
+        super(firstName, secondName, birthDate, gender);
+
+        this.leasedBooks = new HashMap<>();
+        this.boughtBooks = new ArrayList<>();
+        updateAge();
+        this.address = address;
 
         instanceCount++;
         setId();
-
-        this.address = address;
-        this.leasedBooks = new HashMap<>();
-        this.boughtBooks = new ArrayList<>();
+        this.account = new Account(this.id);
     }
 
-    public static int getInstanceCount() {
-        return instanceCount;
+    public HashMap<BookItem, Integer> getLeasedBooks() {
+        return leasedBooks;
+    }
+
+    public ArrayList<BookItem> getBoughtBooks() {
+        return boughtBooks;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
     public String getId() {
@@ -46,85 +59,20 @@ public class Member extends Person {
     }
 
     public void setAddress(Address address) {
-        checkAccountStatus("change address");
         this.address = address;
     }
 
-    public Map<BookItem, Integer> getLeasedBooks() {
-        return leasedBooks;
-    }
-
-    public void addLeasedBook(BookItem leasedBook, int leasedDays) {
-        checkAccountStatus("lease a book");
-        leasedBooks.putIfAbsent(leasedBook, leasedDays);
-    }
-
-    public void addLeasedBook(Map<BookItem, Integer> leasedBooks) {
-        checkAccountStatus("lease a book");
-        leasedBooks.forEach(this.leasedBooks::putIfAbsent);
-    }
-
-    public void removeLeasedBook(BookItem leasedBook) {
-        leasedBooks.remove(leasedBook);
-    }
-
-    public void removeLeasedBook(Map<BookItem, Integer> leasedBooks) {
-        leasedBooks.keySet().forEach(this.leasedBooks::remove);
-    }
-
-    public List<BookItem> getBoughtBooks() {
-        return boughtBooks;
-    }
-
-    public void addBoughtBook(BookItem boughtBook) {
-        checkAccountStatus("buy a book");
-
-        if (!boughtBooks.contains(boughtBook)) {
-            boughtBooks.add(boughtBook);
-        }
-    }
-
-    public void addBoughtBook(List<BookItem> boughtBooks) {
-        checkAccountStatus("buy books");
-
-        boughtBooks.stream()
-                .filter(boughtBook -> !this.boughtBooks.contains(boughtBook))
-                .forEach(this.boughtBooks::add);
-    }
-
-    public void removeBoughtBook(BookItem boughtBook) {
-        boughtBooks.remove(boughtBook);
-    }
-
-    public void removeBoughtBook(List<BookItem> boughtBooks) {
-        this.boughtBooks.removeAll(boughtBooks);
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    private void checkAccountStatus(String act) {
-        if (account.getAccountStatus() != ACTIVE) {
-            throw new IllegalStateException(
-                    "\nERROR\n  Cannot " + act +
-                            " while account is not active"
-            );
-        }
+    public AccountType getAccountType() {
+        return this.accountType;
     }
 
     @Override
     public String toString() {
-        return "Member ID: " + "'" + id + "'\n" +
-                "First Name: " + "'" + super.getFirstName() + "'\n" +
-                "Second Name: " + "'" + super.getSecondName() + "'\n" +
-                "Account ID: " + "'" + account.getAccountNumber() + "'\n" +
-                "Number of Bought Books: " + "'" + boughtBooks.size() + "'\n" +
-                "Number of Leased Books: " + "'" + leasedBooks.size() + "'";
+        return super.toString() + "\n" +
+                "Member ID: " + id + "\n" +
+                "Account ID: " + account.getAccountId() + "\n" +
+                "Number of Bought Books: " + boughtBooks.size() + "\n" +
+                "Number of Leased Books: " + leasedBooks.size();
     }
 
     @Override

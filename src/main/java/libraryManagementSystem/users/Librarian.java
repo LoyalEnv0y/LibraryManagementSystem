@@ -1,27 +1,31 @@
 package libraryManagementSystem.users;
 
 import libraryManagementSystem.account.Account;
+import libraryManagementSystem.account.AccountType;
+import libraryManagementSystem.customExceptions.AccountNotActiveException;
 import libraryManagementSystem.library.Address;
 
 import java.time.LocalDate;
 
-public class Librarian extends Person {
+import static libraryManagementSystem.account.AccountStatus.*;
+
+public class Librarian extends Person implements User {
     private static int instanceCount = 0;
+    private final Account account;
+    private final AccountType accountType = AccountType.ADMIN;
     private String id;
-    private Account account;
     private Address address;
 
-    public Librarian(String firstName, String secondName, LocalDate birthDate,
-                     String gender, Address address) {
-        super(firstName, secondName, birthDate, null, gender);
+    public Librarian(String firstName, String secondName,
+                     LocalDate birthDate, String gender, Address address) {
+
+        super(firstName, secondName, birthDate, gender);
+
+        this.address = address;
 
         instanceCount++;
         setId();
-        this.address = address;
-    }
-
-    public static int getInstanceCount() {
-        return instanceCount;
+        this.account = new Account(this.id);
     }
 
     public String getId() {
@@ -36,10 +40,6 @@ public class Librarian extends Person {
         return account;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
     public Address getAddress() {
         return address;
     }
@@ -48,12 +48,35 @@ public class Librarian extends Person {
         this.address = address;
     }
 
+    public AccountType getAccountType() {
+        return this.accountType;
+    }
+
+    public void banMember(Account memberAccount) {
+        memberAccount.setAccountStatus(BANNED, true);
+    }
+
+    public void unbanMember(Account memberAccount) {
+        memberAccount.setAccountStatus(ACTIVE, true);
+    }
+
+    public void activateMember(Member member) {
+        if (member.getAccount().getAccountStatus() == BANNED) {
+            throw new AccountNotActiveException(
+                    "\nERROR\n  Member: " + member.getFirstName() +
+                            " " + member.getSecondName() + " is banned\n" +
+                            "  To unban the user call unbanMember() method"
+            );
+        }
+
+        member.getAccount().setAccountStatus(ACTIVE, true);
+    }
+
     @Override
     public String toString() {
-        return "Member ID: " + "'" + id + "'\n" +
-                "First Name: " + "'" + super.getFirstName() + "'\n" +
-                "Second Name: " + "'" + super.getSecondName() + "'\n" +
-                "Account ID: " + "'" + account.getAccountNumber() + "'";
+        return super.toString() + "\n" +
+                "Librarian ID: " + id + "\n" +
+                "Account ID: " + account.getAccountId();
     }
 
     @Override

@@ -4,14 +4,26 @@ import libraryManagementSystem.users.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
-public class BookAuthor extends Person implements Cloneable {
+public class BookAuthor extends Person {
     private final ArrayList<Book> books;
+    private LocalDate deathDate;
+    private int age;
 
-    public BookAuthor(String firstName, String secondName, LocalDate birthDate,
-                      LocalDate deathDate, String gender) {
-        super(firstName, secondName, birthDate, deathDate, gender);
+    public BookAuthor(String firstName, String secondName,
+                      LocalDate birthDate, String gender) {
+
+        super(firstName, secondName, birthDate, gender);
+
         this.books = new ArrayList<>();
+    }
+
+    public BookAuthor(String firstName, String secondName,
+                      LocalDate birthDate, String gender, LocalDate deathDate) {
+
+        this(firstName, secondName, birthDate, gender);
+        this.deathDate = deathDate;
     }
 
     public ArrayList<Book> getBooks() {
@@ -24,34 +36,49 @@ public class BookAuthor extends Person implements Cloneable {
         }
     }
 
-    public void addBook(ArrayList<Book> books) {
-        books.stream()
-                .filter(book -> !this.books.contains(book))
-                .forEach(this.books::add);
+    public void addBook(List<Book> books) {
+        books.forEach(this::addBook);
+    }
+
+    public LocalDate getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(LocalDate deathDate) {
+        if (this.deathDate != null) {
+            throw new IllegalStateException(
+                    "\nERROR\n  Author is already dead"
+            );
+        }
+
+        this.deathDate = deathDate;
+    }
+
+    @Override
+    public void updateAge() {
+        LocalDate currentDate = LocalDate.now();
+        if (deathDate != null) {
+            currentDate = deathDate;
+        }
+
+        int age = currentDate.getYear() - getBirthDate().getYear();
+
+        if (currentDate.minusYears(age).isBefore(getBirthDate())) {
+            age--;
+        }
+
+        this.age = age;
+    }
+
+    @Override
+    public int getAge() {
+        updateAge();
+        return age;
     }
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("Author ↴ \n").append(super.toString())
-                .append("\nBooks {\n\n");
-
-        for (Book book : books) {
-            stringBuilder.append("[").append(book).append("]\n")
-                    .append("\n");
-        }
-        stringBuilder.append("}");
-
-        return stringBuilder.toString();
-    }
-
-    @Override
-    public BookAuthor clone() {
-        try {
-            return (BookAuthor) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        return super.toString() + "\n" +
+                "Books: " + books;
     }
 }

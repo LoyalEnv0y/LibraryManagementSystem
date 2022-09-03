@@ -1,44 +1,46 @@
 package libraryManagementSystem.account;
 
-import static libraryManagementSystem.account.AccountStatus.*;
+import libraryManagementSystem.customExceptions.AccountNotActiveException;
+import libraryManagementSystem.customExceptions.IllegalPermissionException;
 
 import java.time.LocalDateTime;
 
+import static libraryManagementSystem.account.AccountStatus.*;
+
 public class Account {
-    private final LocalDateTime createdAt;
-    private final String ownerId;
-    private int accountNumber;
     private static int instanceCount = 0;
+    private final LocalDateTime createdAt;
+    private final String userId;
+    private int accountId;
     private String userName;
     private String password;
     private AccountStatus accountStatus;
-    private AccountType accountType;
 
-    public Account(String userName, String password, String ownerId, AccountType accountType) {
+    public Account(String userId) {
         this.createdAt = LocalDateTime.now();
-        this.userName = userName;
-        this.password = password;
-        this.accountStatus = ACTIVE;
-        this.ownerId = ownerId;
-        this.accountType = accountType;
+        this.userName = "User";
+        this.password = "user@123";
+        this.accountStatus = FROZEN;
+        this.userId = userId;
+
         instanceCount++;
-        setAccountNumber();
-    }
-
-    public int getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber() {
-        this.accountNumber = instanceCount + 1000;
-    }
-
-    public static int getInstanceCount() {
-        return instanceCount;
+        setAccountId();
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    private void setAccountId() {
+        this.accountId = instanceCount + 1000;
     }
 
     public String getUserName() {
@@ -47,7 +49,7 @@ public class Account {
 
     public void setUserName(String userName) {
         if (accountStatus != ACTIVE) {
-            throw new IllegalStateException(
+            throw new AccountNotActiveException(
                     "\nERROR\n  Cannot change username while account " +
                             "is not active"
             );
@@ -61,7 +63,7 @@ public class Account {
 
     public void setPassword(String password) {
         if (accountStatus != ACTIVE) {
-            throw new IllegalStateException(
+            throw new AccountNotActiveException(
                     "\nERROR\n  Cannot change password while account " +
                             "is not active"
             );
@@ -74,40 +76,16 @@ public class Account {
         return accountStatus;
     }
 
-    public void setAccountStatus(AccountStatus accountStatus) {
+    public void setAccountStatus(AccountStatus accountStatus, boolean admin) {
+        if (!admin) {
+            if (this.accountStatus == BANNED || accountStatus == BANNED) {
+                throw new IllegalPermissionException(
+                        "\nERROR\n  Only an administrator can ban or " +
+                                "unban an account"
+                );
+            }
+        }
+
         this.accountStatus = accountStatus;
-    }
-
-    public String  getOwnerId() {
-        return ownerId;
-    }
-
-    public boolean isAdmin() {
-        return accountType == AccountType.ADMIN;
-    }
-
-    public AccountType getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null) {
-            return false;
-        }
-
-        if (!(obj instanceof Account comparedAccount)) {
-            return false;
-        }
-
-        return this.accountNumber == comparedAccount.getAccountNumber();
     }
 }

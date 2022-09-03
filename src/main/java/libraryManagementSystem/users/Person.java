@@ -1,29 +1,22 @@
 package libraryManagementSystem.users;
 
-import libraryManagementSystem.book.BookAuthor;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
-
 public abstract class Person {
     private final LocalDate birthDate;
-    private final IllegalArgumentException illegalNameChange;
     private String firstName;
     private String secondName;
-    private LocalDate deathDate;
+    private int age;
     private String gender;
 
-    public Person(String firstName, String secondName, LocalDate birthDate, LocalDate deathDate, String gender) {
-        this.firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
-        this.secondName = secondName.substring(0, 1).toUpperCase() + secondName.substring(1);
+    public Person(String firstName, String secondName,
+                  LocalDate birthDate, String gender) {
+
+        this.firstName = formatName(firstName);
+        this.secondName = formatName(secondName);
         this.birthDate = birthDate;
         this.gender = gender;
-        setDeathDate(deathDate);
-        illegalNameChange = new IllegalArgumentException(
-                "\nERROR\n  Can't change a dead person's name"
-        );
     }
 
     public String getFirstName() {
@@ -31,10 +24,6 @@ public abstract class Person {
     }
 
     public void setFirstName(String firstName) {
-        if (deathDate != null) {
-            throw illegalNameChange;
-        }
-
         this.firstName = firstName;
     }
 
@@ -43,56 +32,11 @@ public abstract class Person {
     }
 
     public void setSecondName(String secondName) {
-        if (deathDate != null) {
-            throw illegalNameChange;
-        }
-
         this.secondName = secondName;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public LocalDate getDeathDate() {
-        return deathDate;
-    }
-
-    public void setDeathDate(LocalDate deathDate) {
-        if (deathDate == null) {
-            this.deathDate = null;
-            return;
-        }
-
-        if (deathDate.isBefore(birthDate)) {
-            throw new IllegalArgumentException(
-                    "\nError\n  Date of death cannot be earlier then date of birth"
-            );
-        }
-
-        this.deathDate = deathDate;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        if (deathDate != null) {
-            throw new IllegalArgumentException(
-                    "\nERROR\n  Can't change a dead person's gender"
-            );
-        }
-
-        this.gender = gender;
-    }
-
-    public int getAge() {
+    public void updateAge() {
         LocalDate currentDate = LocalDate.now();
-
-        if (deathDate != null) {
-            currentDate = deathDate;
-        }
 
         int age = currentDate.getYear() - birthDate.getYear();
 
@@ -100,20 +44,40 @@ public abstract class Person {
             age--;
         }
 
-        return age;
+        this.age = age;
+    }
+
+    public int getAge() {
+        updateAge();
+        return this.age;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String formatName(String name) {
+        return (name.substring(0, 1).toUpperCase() +
+                name.substring(1)).strip();
     }
 
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu");
         String birthDate = this.birthDate.format(formatter);
-        String deathDate = (this.deathDate == null) ? "-" : this.deathDate.format(formatter);
 
-        return "Full Name: " + "'" + firstName + " " + secondName + "'\n" +
-                "Date of Birth: " + "'" + birthDate + "'\n" +
-                "Age: " + "'" + getAge() + "'\n" +
-                "Date of Death: " + "'" + deathDate + "'\n" +
-                "Gender: " + "'" + gender + "'\n";
+        return "Full Name: " + firstName + " " + secondName + "\n" +
+                "Date of Birth: " + birthDate + "\n" +
+                "Age: " + getAge() + "\n" +
+                "Gender: " + gender;
     }
 
     @Override
@@ -126,14 +90,13 @@ public abstract class Person {
             return false;
         }
 
-        if (!(obj instanceof BookAuthor comparedPerson)) {
+        if (!(obj instanceof Person comparedPerson)) {
             return false;
         }
 
         return this.firstName.equals(comparedPerson.getFirstName()) &&
                 this.secondName.equals(comparedPerson.getSecondName()) &&
                 this.birthDate == comparedPerson.getBirthDate() &&
-                this.getAge() == comparedPerson.getAge() &&
                 this.gender.equals(comparedPerson.getGender());
     }
 }

@@ -1,12 +1,10 @@
 package libraryManagementSystem.book;
 
-import libraryManagementSystem.isbn.ISBN;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Book {
-    private final ISBN isbn;
+public abstract class Book {
+    private final BookISBN isbn;
     private final ArrayList<String> subjects;
     private final ArrayList<String> authors;
     private final String language;
@@ -14,17 +12,19 @@ public class Book {
     private String publisher;
     private int numberOfPages;
 
-    public Book(ISBN isbn, String title, String publisher, String language, int numberOfPages) {
+    public Book(BookISBN isbn, String title, String publisher,
+                String language, int numberOfPages) {
+
         this.isbn = isbn;
-        this.title = title;
         this.subjects = new ArrayList<>();
         this.authors = new ArrayList<>();
-        this.publisher = publisher;
         this.language = language;
+        this.title = title;
+        this.publisher = publisher;
         this.numberOfPages = numberOfPages;
     }
 
-    public ISBN getIsbn() {
+    public BookISBN getIsbn() {
         return isbn;
     }
 
@@ -41,34 +41,24 @@ public class Book {
     }
 
     public void addSubject(String subject) {
-        String formattedSubject = subject.toUpperCase().strip();
+        String formattedSubject = formatSubject(subject);
 
         if (!subjects.contains(formattedSubject)) {
             this.subjects.add(formattedSubject);
         }
     }
 
-    public void addSubject(ArrayList<String> subjects) {
-        List<String> formattedSubjects = subjects
-                .stream().map(subject -> subject.toUpperCase().strip())
-                .toList();
-
-        formattedSubjects.stream()
-                .filter(subject -> !this.subjects.contains(subject))
-                .forEach(this.subjects::add);
+    public void addSubject(List<String> subjects) {
+        subjects.forEach(this::addSubject);
     }
 
     public void deleteSubject(String subject) {
-        String formattedSubject = subject.toUpperCase().strip();
+        String formattedSubject = formatSubject(subject);
         this.subjects.remove(formattedSubject);
     }
 
-    public void deleteSubject(ArrayList<String> subjects) {
-        List<String> formattedSubjects = subjects
-                .stream().map(subject -> subject.toUpperCase().strip())
-                .toList();
-
-        this.subjects.removeAll(formattedSubjects);
+    public void deleteSubject(List<String> subjects) {
+        subjects.forEach(this::deleteSubject);
     }
 
     public ArrayList<String> getAuthors() {
@@ -76,17 +66,27 @@ public class Book {
     }
 
     public void addAuthor(BookAuthor author) {
-        String fullName = author.getFirstName() + " " + author.getSecondName();
+        String fullName = getFullAuthorName(author);
         if (!authors.contains(fullName)) {
             authors.add(fullName);
         }
     }
 
-    public void addAuthor(ArrayList<BookAuthor> authors) {
-        authors.stream()
-                .filter(author -> !this.authors.contains(
-                        author.getFirstName() + " " + author.getSecondName()))
-                .forEach(this::addAuthor);
+    public void addAuthor(List<BookAuthor> authors) {
+        authors.forEach(this::addAuthor);
+    }
+
+    public void deleteAuthor(BookAuthor author) {
+        String fullName = getFullAuthorName(author);
+        authors.remove(fullName);
+    }
+
+    public void deleteAuthor(List<BookAuthor> authors) {
+        authors.forEach(this::deleteAuthor);
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     public String getPublisher() {
@@ -97,10 +97,6 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
     public int getNumberOfPages() {
         return numberOfPages;
     }
@@ -109,14 +105,17 @@ public class Book {
         this.numberOfPages = numberOfPages;
     }
 
+    private String formatSubject(String subject) {
+        return subject.toUpperCase().strip();
+    }
+
+    private String getFullAuthorName(BookAuthor author) {
+        return author.getFirstName() + " " + author.getSecondName();
+    }
+
     @Override
     public String toString() {
-        return "Title: " + "'" + title + "'\n" +
-                "Subjects: " + "'" + subjects + "'\n" +
-                "Authors: " + "'" + authors + "'\n" +
-                "Publisher: " + "'" + publisher + "'\n" +
-                "Language: " + "'" + language + "'\n" +
-                "Pages: " + "'" + numberOfPages + "'";
+        return title;
     }
 
     @Override
