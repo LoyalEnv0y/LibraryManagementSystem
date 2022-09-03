@@ -1,36 +1,36 @@
 package libraryManagementSystem.book;
 
-import libraryManagementSystem.isbn.ISBN;
-import libraryManagementSystem.isbn.ISBNVersion;
 
+import libraryManagementSystem.customExceptions.IllegalBookStatusException;
+import libraryManagementSystem.customExceptions.IllegalDateException;
 import org.junit.jupiter.api.Test;
 
 import javax.naming.SizeLimitExceededException;
-
 import java.time.LocalDate;
 
 import static libraryManagementSystem.book.BookStatus.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BookItemTest {
     private final BookItem bookItem;
 
     public BookItemTest() {
         bookItem = new BookItem(
-                new ISBN("8-699118-040781", ISBNVersion.THIRTEEN_DIGIT),
-                "Book A",
-                "A Pub.",
-                "English",
-                332,
+                new BookISBN("978-8-3816-9598-5"),
+                "Test Title",
+                "Test Publisher",
+                "Language",
+                123,
                 BookFormat.PAPERBACK,
-                14.40
+                12.30
         );
     }
 
     @Test
     public void testId() {
         BookItem bookItem2 = bookItem.clone();
-        int idShouldBe = BookItem.getNumberOfBookItems() + 1000;
+        int idShouldBe = BookItem.getInstanceCount() + 1000;
         assertEquals(idShouldBe, bookItem2.getId());
     }
 
@@ -59,8 +59,8 @@ public class BookItemTest {
                     //************Setting Status When Status is AVAILABLE************//
                     case AVAILABLE -> {
                         if (statusToBeSet == REFUNDED) {
-                            IllegalStateException exception = assertThrows(
-                                    IllegalStateException.class,
+                            IllegalBookStatusException exception = assertThrows(
+                                    IllegalBookStatusException.class,
                                     () -> testBook.setStatus(statusToBeSet)
                             );
 
@@ -75,8 +75,8 @@ public class BookItemTest {
                     //**************Setting Status When Status is SOLD***************//
                     case SOLD -> {
                         if (statusToBeSet != REFUNDED) {
-                            IllegalStateException exception = assertThrows(
-                                    IllegalStateException.class,
+                            IllegalBookStatusException exception = assertThrows(
+                                    IllegalBookStatusException.class,
                                     () -> testBook.setStatus(statusToBeSet)
                             );
 
@@ -91,8 +91,8 @@ public class BookItemTest {
                     //************Setting Status When Status is LOANED*************//
                     case LOANED -> {
                         if (statusToBeSet == SOLD) {
-                            IllegalStateException exception = assertThrows(
-                                    IllegalStateException.class,
+                            IllegalBookStatusException exception = assertThrows(
+                                    IllegalBookStatusException.class,
                                     () -> testBook.setStatus(statusToBeSet)
                             );
 
@@ -107,8 +107,8 @@ public class BookItemTest {
                     //***************Setting Status When Status is LOST**************//
                     case LOST -> {
                         if (statusToBeSet != AVAILABLE) {
-                            IllegalStateException exception = assertThrows(
-                                    IllegalStateException.class,
+                            IllegalBookStatusException exception = assertThrows(
+                                    IllegalBookStatusException.class,
                                     () -> testBook.setStatus(statusToBeSet)
                             );
 
@@ -157,8 +157,8 @@ public class BookItemTest {
             }
             bookItem.setStatus(status);
 
-            IllegalStateException stateException = assertThrows(
-                    IllegalStateException.class,
+            IllegalBookStatusException stateException = assertThrows(
+                    IllegalBookStatusException.class,
                     () -> bookItem.setDateOfBorrow(dateToBeSet)
             );
 
@@ -183,8 +183,8 @@ public class BookItemTest {
     public void testSetDueDateWhenBorrowDateNull() {
         LocalDate dueDate = LocalDate.of(2022, 10, 4);
 
-        IllegalStateException stateException = assertThrows(
-                IllegalStateException.class,
+        IllegalDateException stateException = assertThrows(
+                IllegalDateException.class,
                 () -> bookItem.setDateOfDue(dueDate)
         );
 
@@ -200,8 +200,8 @@ public class BookItemTest {
         LocalDate dueDate = borrowDate.minusDays(3);
         bookItem.setDateOfBorrow(borrowDate);
 
-        IllegalArgumentException stateException = assertThrows(
-                IllegalArgumentException.class,
+        IllegalDateException stateException = assertThrows(
+                IllegalDateException.class,
                 () -> bookItem.setDateOfDue(dueDate)
         );
 

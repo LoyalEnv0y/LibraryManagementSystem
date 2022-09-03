@@ -1,25 +1,26 @@
 package libraryManagementSystem.library;
 
-import libraryManagementSystem.book.BookItem;
-import libraryManagementSystem.users.Librarian;
-import libraryManagementSystem.users.Member;
+import libraryManagementSystem.account.Account;
+import libraryManagementSystem.catalog.Catalog;
+import libraryManagementSystem.users.User;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Library {
+    private final Catalog catalog;
+    private final Address address;
+    private final HashMap<String, User> userMap;
+    private final HashMap<Integer, Account> accountMap;
     private String name;
-    private Address address;
-    private final List<BookItem> bookItems;
-    private final List<Member> members;
-    private final List<Librarian> librarians;
 
-    public Library(String name, Address address) {
-        this.name = name;
+    public Library(String name, Address address, Catalog catalog) {
+        this.catalog = catalog;
         this.address = address;
-        this.bookItems = new ArrayList<>();
-        this.members = new ArrayList<>();
-        this.librarians = new ArrayList<>();
+        this.userMap = new HashMap<>();
+        this.accountMap = new HashMap<>();
+        this.name = name;
     }
 
     public String getName() {
@@ -30,83 +31,77 @@ public class Library {
         this.name = name;
     }
 
+    public Catalog getCatalog() {
+        return catalog;
+    }
+
     public Address getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public HashMap<String, User> getUserMap() {
+        return userMap;
     }
 
-    public List<BookItem> getBookItems() {
-        return bookItems;
+    public HashMap<Integer, Account> getAccountMap() {
+        return accountMap;
     }
 
-    public void addBookItem(BookItem bookItem) {
-        if (!this.bookItems.contains(bookItem)) {
-            this.bookItems.add(bookItem);
-        }
+    public void addUser(User user) {
+        this.userMap.put(user.getId(), user);
+        this.accountMap.put(user.getAccount().getAccountId(), user.getAccount());
     }
 
-    public void addBookItem(List<BookItem> bookItems) {
-        bookItems.stream()
-                .filter(bookItem -> !this.bookItems.contains(bookItem))
-                .forEach(this.bookItems::add);
+    public void addUser(List<User> users) {
+        users.forEach(this::addUser);
     }
 
-    public void removeBookItem(BookItem bookItem) {
-        this.bookItems.remove(bookItem);
+    public void addUser(Map<String, User> users) {
+        this.userMap.putAll(users);
     }
 
-    public void removeBookItem(List<BookItem> bookItems) {
-        this.bookItems.removeAll(bookItems);
+    public void deleteUser(String userId) {
+        deleteAccount(findAccount(userId).getAccountId());
+        this.userMap.remove(userId);
     }
 
-    public List<Member> getMembers() {
-        return members;
+    public void deleteUser(User user) {
+        deleteUser(user.getId());
     }
 
-    public void addMember(Member member) {
-        if (!this.members.contains(member)) {
-            this.members.add(member);
-        }
+    public void deleteUser(List<User> users) {
+        users.forEach(this::deleteUser);
     }
 
-    public void addMember(List<Member> members) {
-        members.stream()
-                .filter(member -> !this.members.contains(member))
-                .forEach(this.members::add);
+    private void deleteAccount(Integer accountId) {
+        this.accountMap.remove(accountId);
     }
 
-    public void removeMember(Member member) {
-        this.members.remove(member);
+    public User findUser(String userId) {
+        return userMap.get(userId);
     }
 
-    public void removeMember(List<Member> members) {
-        this.members.removeAll(members);
+    public User findUser(Integer accountId) {
+        return findUser(findAccount(accountId).getUserId());
     }
 
-    public List<Librarian> getLibrarians() {
-        return librarians;
+    public User findUser(Account account) {
+        return findUser(account.getAccountId());
     }
 
-    public void addLibrarian(Librarian librarian) {
-        if (!this.librarians.contains(librarian)) {
-            this.librarians.add(librarian);
-        }
+    public Account findAccount(Integer accountId) {
+        return accountMap.get(accountId);
     }
 
-    public void addLibrarian(List<Librarian> librarians) {
-        librarians.stream()
-                .filter(librarian -> !this.librarians.contains(librarian))
-                .forEach(this.librarians::add);
+    public Account findAccount(Account account) {
+        return findAccount(account.getAccountId());
     }
 
-    public void removeLibrarian(Librarian librarian) {
-        this.librarians.remove(librarian);
+    public Account findAccount(User user) {
+        return findAccount(user.getAccount());
     }
 
-    public void removeLibrarian(List<Librarian> librarians) {
-        this.librarians.removeAll(librarians);
+    public Account findAccount(String userid) {
+        return findAccount(findUser(userid));
     }
 }

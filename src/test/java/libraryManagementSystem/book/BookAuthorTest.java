@@ -1,46 +1,80 @@
 package libraryManagementSystem.book;
 
-import libraryManagementSystem.book.Book;
-import libraryManagementSystem.book.BookAuthor;
-import libraryManagementSystem.isbn.ISBN;
-import libraryManagementSystem.isbn.ISBNVersion;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BookAuthorTest {
+    /**
+     * "Bud Period" is a term that I came up with to indicate the current date
+     * is before the birthdate.
+     * <p>
+     * For example: If I were born in 2000.01.20 and the current date is
+     * 2002.01.10 then I would be 1 years old not 2. From the start of the
+     * current year to the birthdate is what I call "Bud Period"
+     */
     private final BookAuthor author;
+    private final BookAuthor authorWithBudPeriod;
     private final Book book1;
     private final Book book2;
 
     public BookAuthorTest() {
-        this.author = new BookAuthor("Alive", "Author",
+        this.authorWithBudPeriod = new BookAuthor("Test", "Author",
                 LocalDate.of(1970, 6, 22),
-                null,
-                "Male");
-
-        this.book1 = new Book(
-                new ISBN("8-699118-040781", ISBNVersion.THIRTEEN_DIGIT),
-                "A",
-                "A-PUB.",
-                "English",
-                221
+                "Male",
+                LocalDate.of(2020, 4, 20)
         );
 
-        this.book2 = new Book(
-                new ISBN("978-0-306-40615-7", ISBNVersion.THIRTEEN_DIGIT),
-                "B",
-                "B-PUB.",
-                "French",
-                524
+        this.author = new BookAuthor("Test",
+                "Author with bud period",
+                LocalDate.of(1970, 6, 22),
+                "Male",
+                LocalDate.of(2020, 8, 20)
+        );
+
+        this.book1 = new BookItem(
+                new BookISBN("978-3-7982-6276-8"),
+                "Test Title",
+                "Test Publisher",
+                "Language",
+                123,
+                BookFormat.PAPERBACK,
+                12.30
+        );
+
+        this.book2 = new BookItem(
+                new BookISBN("978-7-7000-6763-2"),
+                "Test Title2",
+                "Test Publisher2",
+                "Language",
+                123,
+                BookFormat.PAPERBACK,
+                12.40
         );
     }
 
     @Test
-    public void testAddBookWhereBookAlreadyExists() {
+    public void testAddBook() {
+        author.addBook(book1);
+        assertEquals(1, author.getBooks().size());
+    }
+
+    @Test
+    public void testAddMultipleBooks() {
+        ArrayList<Book> books = new ArrayList<>();
+        books.add(book1);
+        books.add(book2);
+
+        author.addBook(books);
+        assertEquals(2, author.getBooks().size());
+    }
+
+    @Test
+    public void testAddDuplicateBook() {
         author.addBook(book1);
         author.addBook(book1);
 
@@ -48,14 +82,24 @@ public class BookAuthorTest {
     }
 
     @Test
-    public void testAddBookWhereBooksAlreadyExists() {
-        ArrayList<Book> books = new ArrayList<>();
-        books.add(book1);
-        books.add(book2);
+    public void testSetDeathDateForDeadAuthor() {
+        IllegalStateException stateException = assertThrows(
+                IllegalStateException.class,
+                () -> author.setDeathDate(LocalDate.now())
+        );
 
-        author.addBook(books);
-        author.addBook(books);
+        assertEquals("\nERROR\n  Author is already dead",
+                stateException.getMessage()
+        );
+    }
 
-        assertEquals(2, author.getBooks().size());
+    @Test
+    public void updateAgeForDeadAuthorWithBudPeriod() {
+        assertEquals(49, authorWithBudPeriod.getAge());
+    }
+
+    @Test
+    public void updateAgeForDeadAuthorWithoutBudPeriod() {
+        assertEquals(50, author.getAge());
     }
 }

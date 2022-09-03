@@ -1,4 +1,5 @@
-package libraryManagementSystem.book.sortBookItems;
+package libraryManagementSystem.catalog.sortBookItems;
+
 
 import libraryManagementSystem.book.BookItem;
 
@@ -8,6 +9,6 @@ public class SortByPrice implements Comparator<BookItem> {
 
     @Override
     public int compare(BookItem book1, BookItem book2) {
-        return Double.compare(book1.getPrice(), book2.getPrice());
+        return Double.compare(book2.getPrice(), book1.getPrice());
     }
 }

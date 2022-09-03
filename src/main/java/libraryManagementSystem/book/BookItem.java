@@ -1,6 +1,7 @@
 package libraryManagementSystem.book;
 
-import libraryManagementSystem.isbn.ISBN;
+import libraryManagementSystem.customExceptions.IllegalBookStatusException;
+import libraryManagementSystem.customExceptions.IllegalDateException;
 
 import javax.naming.SizeLimitExceededException;
 import java.time.LocalDate;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 import static libraryManagementSystem.book.BookStatus.*;
 
 public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
-    private static int numberOfBookItems = 0;
+    private static int instanceCount = 0;
     private final BookFormat format;
     private int id;
     private BookStatus status;
@@ -16,28 +17,34 @@ public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
     private LocalDate dateOfBorrow;
     private LocalDate dateOfDue;
 
-    public BookItem(ISBN isbn, String title, String publisher, String language,
-                    int numberOfPages, BookFormat format,
-                    double price) {
+    public BookItem(BookISBN isbn, String title, String publisher,
+                    String language, int numberOfPages,
+                    BookFormat format, double price) {
 
         super(isbn, title, publisher, language, numberOfPages);
-        numberOfBookItems++;
-        setId();
-        this.status = AVAILABLE;
+
         this.format = format;
+        this.status = AVAILABLE;
         this.price = price;
+
+        instanceCount++;
+        setId();
     }
 
-    public static int getNumberOfBookItems() {
-        return numberOfBookItems;
+    public static int getInstanceCount() {
+        return instanceCount;
     }
 
     private void setId() {
-        this.id = 1000 + numberOfBookItems;
+        this.id = 1000 + instanceCount;
     }
 
     public int getId() {
         return id;
+    }
+
+    public BookFormat getFormat() {
+        return format;
     }
 
     public BookStatus getStatus() {
@@ -45,36 +52,33 @@ public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
     }
 
     public void setStatus(BookStatus status) {
-        IllegalStateException stateException = new IllegalStateException(
-                "\nERROR\n  When the status is " + this.status +
-                        " it cannot be set to " + status
-        );
+        IllegalBookStatusException illegalBookStatus =
+                new IllegalBookStatusException(
+                        "\nERROR\n  When the status is " + this.status +
+                                " it cannot be set to " + status
+                );
 
         switch (this.status) {
             // When a book is Available it cannot be set to Refunded
             case AVAILABLE -> {
-                if (status == REFUNDED) throw stateException;
+                if (status == REFUNDED) throw illegalBookStatus;
             }
             // When a book is Sold it can ONLY be set to Refunded
             case SOLD -> {
-                if (status != REFUNDED) throw stateException;
+                if (status != REFUNDED) throw illegalBookStatus;
             }
             // When a book is Lost it can only be set to Available (in case it is found)
             case LOST -> {
-                if (status != AVAILABLE) throw stateException;
+                if (status != AVAILABLE) throw illegalBookStatus;
             }
             // When a book is Loaned it cannot be set to Sold
             case LOANED -> {
-                if (status == SOLD) throw stateException;
+                if (status == SOLD) throw illegalBookStatus;
             }
         }
 
         // Refunded state does not have any restrains
         this.status = status;
-    }
-
-    public BookFormat getFormat() {
-        return format;
     }
 
     public double getPrice() {
@@ -96,7 +100,7 @@ public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
 
     public void setDateOfBorrow(LocalDate dateOfBorrow) {
         if (status == LOST || status == SOLD) {
-            throw new IllegalStateException(
+            throw new IllegalBookStatusException(
                     "\nERROR\n  Cannot set the date of borrow " +
                             "of a book when it is " + this.status
             );
@@ -110,14 +114,14 @@ public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
 
     public void setDateOfDue(LocalDate dateOfDue) {
         if (dateOfBorrow == null) {
-            throw new IllegalStateException(
+            throw new IllegalDateException(
                     "\nERROR\n  When the date of borrow is null " +
                             "setting date of due is not possible"
             );
         }
 
         if (dateOfBorrow.isAfter(dateOfDue)) {
-            throw new IllegalArgumentException(
+            throw new IllegalDateException(
                     "\nERROR\n  Date of due cannot be earlier then " +
                             "date of barrow"
             );
@@ -127,13 +131,13 @@ public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
     }
 
     @Override
+    public int compareTo(BookItem o) {
+        return this.id - o.id;
+    }
+
+    @Override
     public String toString() {
-        return super.toString() +
-                "Format: " + "'" + format + "'\n" +
-                "Status: " + "'" + status + "'\n" +
-                "Price: " + "'" + price + "'\n" +
-                "Date of Borrow: " + "'" + dateOfBorrow + "'\n" +
-                "Date of Due: " + "'" + dateOfDue + "'";
+        return id + " " + super.toString() + " " + status + " " + price;
     }
 
     @Override
@@ -164,10 +168,5 @@ public class BookItem extends Book implements Cloneable, Comparable<BookItem> {
                 getFormat(),
                 getPrice()
         );
-    }
-
-    @Override
-    public int compareTo(BookItem o) {
-        return this.id - o.id;
     }
 }

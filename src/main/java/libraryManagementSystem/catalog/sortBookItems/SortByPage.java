@@ -1,4 +1,4 @@
-package libraryManagementSystem.book.sortBookItems;
+package libraryManagementSystem.catalog.sortBookItems;
 
 import libraryManagementSystem.book.BookItem;
 

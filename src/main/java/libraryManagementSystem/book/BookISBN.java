@@ -1,7 +1,37 @@
-package libraryManagementSystem.isbn;
+package libraryManagementSystem.book;
 
-public class ISBNHandler {
-    public boolean verifyValue(String value) {
+public class BookISBN {
+    private String value;
+
+    public BookISBN(String value) {
+        setValue(value);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        verifyIsbn(value);
+        this.value = value;
+    }
+
+    public void verifyIsbn(String value) {
+        String formattedValue = formatValue(value);
+
+        if (!hasValidValue(formattedValue)) {
+            throw new IllegalArgumentException(
+                    "\nERROR:\n  Value -> "
+                            + value + " is not a valid ISBN value"
+            );
+        }
+    }
+
+    public void verifyIsbn() {
+        verifyIsbn(this.getValue());
+    }
+
+    public boolean hasValidValue(String value) {
         String formattedValue = formatValue(value);
 
         if (formattedValue.length() == 10) {
@@ -38,7 +68,7 @@ public class ISBNHandler {
         total += (lastDigit == 'X') ? 10 : lastDigit - '0';
         return total % 11 == 0;
     }
-    
+
     private boolean verifyValueOfThirteen(String value) {
         int sum = 0;
         boolean multiplyByThree = false;
@@ -57,14 +87,6 @@ public class ISBNHandler {
         }
 
         return sum % 10 == 0;
-    }
-
-    public boolean verifyVersion(int length, ISBNVersion format) {
-        if (length == 10 && format.equals(ISBNVersion.TEN_DIGIT)) {
-            return true;
-        }
-
-        return length == 13 && format.equals(ISBNVersion.THIRTEEN_DIGIT);
     }
 
     public String formatValue(String value) {
